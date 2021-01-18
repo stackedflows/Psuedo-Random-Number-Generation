@@ -105,7 +105,7 @@ _loop_s:
   mov dword [square_ret], ebx
   ret
 
-_power_of_ten:
+_power_of_ten: ;returns ten to the power of some value
   mov eax, 10
   mov ecx, [ten_raised_to]
   jmp _loop_pot
