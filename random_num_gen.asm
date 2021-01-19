@@ -1,4 +1,4 @@
-;;globals
+;;variables
 section .bss ; declare variable arrays
   _bss_start:
     seed resd 8 ; seed location intitialised with 8 bytes of space
