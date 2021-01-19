@@ -11,9 +11,6 @@ section .bss ; declare variable arrays
     ten_val resd 8
     ten_val_ret resd 8
 
-    to_test_even resd 8
-    is_even resb 1
-
     to_divide resd 8
     divide_by resd 8
     quotient resd 8
