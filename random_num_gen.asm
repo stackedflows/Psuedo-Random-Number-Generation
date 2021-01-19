@@ -1,7 +1,7 @@
 ;;globals
 section .bss ; declare variable arrays
   _bss_start:
-    seed resd 2
+    seed resd 8
     numbers_seen resq 4000
     position_in_seen resd 8
 
@@ -16,22 +16,29 @@ section .bss ; declare variable arrays
     quotient resd 8
     remainder resd 8
 
-    digit resd 1
-    digit_ret resd 1
+    number_to_parse resd 8
+    digit resd 8
+    digit_ret resd 8
 
     ten_raised_to resd 8
     power_of_ten_ret resd 8
 
     number_to_analyse resd 8
-    analyse_against resd 8
-    base_ten_iterations resb 1
+    base_ten_iterations resd 8
   _bss_end:
 
 ;;main code
 section .text ; code section
   global _start
 _start:
-  mov eax, 1 ; sys write
+  mov eax, 1
+
+  mov dword [number_to_parse], 13213
+  mov dword [digit], 2
+  call _nth_digit
+  mov eax, 1
+  mov ebx, [digit_ret]
+  int 0x80
 
 ;;functions
 _length: ;calulates number of digits in number, returns to base_ten_iterations
@@ -45,7 +52,7 @@ _loop_l:
   mov edx, [base_ten_iterations]
   mov eax, [power_of_ten_ret]
   cmp eax, [number_to_analyse]
-  jle _loop_l
+  jl _loop_l
   jg _exit
 _exit:
   mov dword [base_ten_iterations], edx
@@ -53,6 +60,8 @@ _exit:
 
 _nth_digit: ;returns the nth digit from the right to digit_ret
   mov eax, [digit]
+  mov ebx, [number_to_parse]
+  mov dword [to_divide], ebx
   cmp eax, 1
   je _unit
   jne _nunit
