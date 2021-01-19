@@ -1,14 +1,11 @@
 ;;globals
 section .bss ; declare variable arrays
   _bss_start:
-    seed resd 8
+    seed resd 8 ; greater than 2 digits
     numbers_seen resq 4000
-
+    final resb 1
     square resd 8
     square_ret resd 8
-
-    ten_val resd 8
-    ten_val_ret resd 8
 
     to_divide resd 8
     divide_by resd 8
@@ -26,10 +23,10 @@ section .bss ; declare variable arrays
     base_ten_iterations resd 8
 
     middle_num resd 8
-    middle_num_length resd 8
     middle_num_ret resd 8
 
     position resd 8
+    current_number resd 8
   _bss_end:
 
 ;;main code
@@ -38,10 +35,17 @@ section .text ; code section
 _start:
   mov eax, 1
 
+  mov dword [square], 4
+  call _square
+  mov ebx, [square_ret]
+  mov dword [middle_num], ebx
+  call _middle_digit
+  mov ebx, [middle_num_ret]
+  mov eax, 1
+  int 0x80
 
 ;;processes
 _cycle:
-  
 
 ;;functions
 _middle_digit: ; returns the middle digit of middle_num to middle_num_ret
@@ -58,6 +62,7 @@ _middle_digit: ; returns the middle digit of middle_num to middle_num_ret
   mov dword [digit], ebx
   call _nth_digit
   mov ebx, [digit_ret]
+  mov dword [middle_num_ret], ebx
   ret
 
 _length: ;calulates number of digits in number, returns to base_ten_iterations
