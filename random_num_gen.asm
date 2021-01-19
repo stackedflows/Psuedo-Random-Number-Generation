@@ -1,9 +1,6 @@
 ;;globals
 section .bss ; declare variable arrays
   _bss_start:
-    seed resd 8 ; greater than 2 digits
-    numbers_seen resq 4000
-    final resb 1
     square resd 8
     square_ret resd 8
 
@@ -25,8 +22,13 @@ section .bss ; declare variable arrays
     middle_num resd 8
     middle_num_ret resd 8
 
-    position resd 8
     current_number resd 8
+
+    position resd 8
+
+    seed resd 8 ; greater than 2 digits
+    numbers_seen resq 4000
+    final resb 1
   _bss_end:
 
 ;;main code
@@ -34,13 +36,10 @@ section .text ; code section
   global _start
 _start:
   mov eax, 1
-
-  mov dword [square], 4
-  call _square
-  mov ebx, [square_ret]
-  mov dword [middle_num], ebx
-  call _middle_digit
-  mov ebx, [middle_num_ret]
+  mov dword [seed], 11
+  
+  mov dword [current_number], 3
+  call _iterate_middle
   mov eax, 1
   int 0x80
 
@@ -48,6 +47,16 @@ _start:
 _cycle:
 
 ;;functions
+_iterate_middle: ; calulates the next middle digit, returns to current_number
+  mov eax, [current_number]
+  mov dword [square], eax
+  call _square
+  mov eax, [square_ret]
+  mov dword [middle_num], eax
+  call _middle_digit
+  mov ebx, [middle_num_ret]
+  ret
+
 _middle_digit: ; returns the middle digit of middle_num to middle_num_ret
   mov ebx, [middle_num]
   mov dword [number_to_analyse], ebx
