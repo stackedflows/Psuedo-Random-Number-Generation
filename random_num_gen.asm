@@ -1,4 +1,4 @@
-;;variables
+;;globals
 section .bss ; declare variable arrays
   _bss_start:
     seed resd 8 ; seed location intitialised with 8 bytes of space
@@ -21,18 +21,38 @@ section .bss ; declare variable arrays
 
     ten_raised_to resd 8
     power_of_ten_ret resd 8
+
+    number_to_analyse resd 8
+    analyse_against resd 8
+    base_ten_iterations resb 1
   _bss_end:
 
 ;;main code
 section .text ; code section
   global _start
 _start:
-  mov eax, 4 ; sys write
-
+  mov eax, 1 ; sys write
 
 ;;functions
 
-_nth_digit: ;returns the nth digit from the right
+_length: ;calulates number of digits in number, returns to base_ten_iterations
+  mov edx, 1
+  jmp _loop_l
+_loop_l:
+  inc edx
+  mov dword [base_ten_iterations], edx
+  mov dword [ten_raised_to], edx
+  call _power_of_ten
+  mov edx,[base_ten_iterations]
+  mov eax, [power_of_ten_ret]
+  cmp eax, [number_to_analyse]
+  jle _loop_l
+  jg _exit
+_exit:
+  mov dword [base_ten_iterations], edx
+  ret
+
+_nth_digit: ;returns the nth digit from the right to digit_ret
   mov eax, [digit]
   cmp eax, 1
   je _unit
@@ -58,15 +78,15 @@ _nunit:
   mov dword [digit_ret], ebx
   ret
 
-_divide: ; divides and returns to address quotient, remainder
-  mov eax, [to_divide]
-  mov ebx, [divide_by]
-  mov edx, 0
-  div ebx
-  mov ebx, eax
-  mov [quotient], eax
-  mov [remainder], edx
-  ret
+_divide: ; divides and returns to quotient/remainder
+    mov eax, [to_divide]
+    mov ebx, [divide_by]
+    mov edx, 0
+    div ebx
+    mov ebx, eax
+    mov [quotient], eax
+    mov [remainder], edx
+    ret
 
 _times_ten: ; multiply a number by 10 function
   mov ebx, [ten_val]
@@ -80,19 +100,7 @@ _loop_t:
   mov dword [ten_val_ret], ebx
   ret
 
-_square: ;square function
-  mov ebx, [square]
-  mov ecx, [square]
-  jmp _loop_s
-_loop_s:
-  dec ecx
-  add ebx, [square]
-  cmp ecx, 1
-  jne _loop_s
-  mov dword [square_ret], ebx
-  ret
-
-_power_of_ten: ;returns ten to the power of some value
+_power_of_ten: ;returns power of ten
   mov eax, 10
   mov ecx, [ten_raised_to]
   jmp _loop_pot
@@ -103,9 +111,16 @@ _loop_pot:
   cmp ecx, 1
   jne _loop_pot
   mov dword [power_of_ten_ret], eax
-  mov eax, 0
-  mov ebx, 0
-  mov edx, 0
-  mov ecx, 0
   ret
 
+_square: ;square function
+    mov ebx, [square]
+    mov ecx, [square]
+    jmp _loop_s
+_loop_s:
+    dec ecx
+    add ebx, [square]
+    cmp ecx, 1
+    jne _loop_s
+    mov dword [square_ret], ebx
+    ret
