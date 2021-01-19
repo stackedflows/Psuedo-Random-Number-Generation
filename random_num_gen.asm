@@ -87,18 +87,6 @@ _divide: ; divides and returns to quotient/remainder
   mov [remainder], edx
   ret
 
-_times_ten: ; multiply a number by 10 function
-  mov ebx, [ten_val]
-  mov ecx, 10
-  jmp _loop_t
-_loop_t:
-  dec ecx
-  add ebx, [ten_val]
-  cmp ecx, 1
-  jne _loop_t
-  mov dword [ten_val_ret], ebx
-  ret
-
 _power_of_ten: ;returns power of ten
   mov eax, 10
   mov ecx, [ten_raised_to]
