@@ -20,41 +20,53 @@ section .bss ; declare variable arrays
     base_ten_iterations resd 8
 
     middle_num resd 8
-    middle_num_ret resd 8
+    next_number resd 8
 
     current_number resd 8
-
-    position resd 8
-
     seed resd 8 ; greater than 2 digits
-    numbers_seen resq 4000
-    final resb 1
+    numbers_seen resb 4000 ; 1000 entries of 8 bytes
+    position resd 8
   _bss_end:
 
 ;;main code
 section .text ; code section
   global _start
 _start:
-  mov eax, 1
-  mov dword [seed], 11
-  
-  mov dword [current_number], 3
-  call _iterate_middle
-  mov eax, 1
-  int 0x80
+  mov dword [seed], 1234
+  mov eax, [seed]
+  mov dword [numbers_seen], eax
+  jmp _populate_arr
 
 ;;processes
-_cycle:
+_populate_arr: ;populates the array with pseudo-random integers
+  mov ecx, 0
+  jmp _loop_pa
+_loop_pa:
+  mov eax, [numbers_seen + ecx]
+  mov dword [current_number], eax
+  mov dword [position], ecx
+  call _iterate_middle
+  mov ebx, [next_number]
+  mov ecx, [position]
+  inc ecx
+  mov dword [numbers_seen + ecx + 1], ebx
+  cmp ecx, 1000
+  jg _gg
+  jl _loop_pa
+
+_gg:
+  mov eax, 1
+  mov ebx, [numbers_seen + 13] ;pick what number in the sequence to look at
+  int 0x80
 
 ;;functions
-_iterate_middle: ; calulates the next middle digit, returns to current_number
+_iterate_middle: ; calulates the next middle digit, returns to middle_num_ret
   mov eax, [current_number]
   mov dword [square], eax
   call _square
   mov eax, [square_ret]
   mov dword [middle_num], eax
   call _middle_digit
-  mov ebx, [middle_num_ret]
   ret
 
 _middle_digit: ; returns the middle digit of middle_num to middle_num_ret
@@ -71,7 +83,7 @@ _middle_digit: ; returns the middle digit of middle_num to middle_num_ret
   mov dword [digit], ebx
   call _nth_digit
   mov ebx, [digit_ret]
-  mov dword [middle_num_ret], ebx
+  mov dword [next_number], ebx
   ret
 
 _length: ;calulates number of digits in number, returns to base_ten_iterations
