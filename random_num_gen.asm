@@ -71,16 +71,6 @@ _divide: ; divides and returns to address quotient, remainder
   mov [remainder], edx
   ret
 
-_test_even: ;not even, returns 1 to is_even, else returns 0
-  mov ebx, [to_test_even]
-  test bx, 1
-  jnz _even
-  mov dword [is_even], 1
-  ret
-_even:
-  mov dword [is_even], 0
-  ret
-
 _times_ten: ; multiply a number by 10 function
   mov ebx, [ten_val]
   mov ecx, 10
