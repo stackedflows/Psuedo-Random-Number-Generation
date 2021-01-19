@@ -1,8 +1,8 @@
 ;;globals
 section .bss ; declare variable arrays
   _bss_start:
-    seed resd 8 ; seed location intitialised with 8 bytes of space
-    numbers_seen resq 4000 ; array of 100*8 bytes, bloody massive! too big?
+    seed resd 2
+    numbers_seen resq 4000
     position_in_seen resd 8
 
     square resd 8
@@ -34,7 +34,6 @@ _start:
   mov eax, 1 ; sys write
 
 ;;functions
-
 _length: ;calulates number of digits in number, returns to base_ten_iterations
   mov edx, 1
   jmp _loop_l
@@ -43,7 +42,7 @@ _loop_l:
   mov dword [base_ten_iterations], edx
   mov dword [ten_raised_to], edx
   call _power_of_ten
-  mov edx,[base_ten_iterations]
+  mov edx, [base_ten_iterations]
   mov eax, [power_of_ten_ret]
   cmp eax, [number_to_analyse]
   jle _loop_l
@@ -79,14 +78,14 @@ _nunit:
   ret
 
 _divide: ; divides and returns to quotient/remainder
-    mov eax, [to_divide]
-    mov ebx, [divide_by]
-    mov edx, 0
-    div ebx
-    mov ebx, eax
-    mov [quotient], eax
-    mov [remainder], edx
-    ret
+  mov eax, [to_divide]
+  mov ebx, [divide_by]
+  mov edx, 0
+  div ebx
+  mov ebx, eax
+  mov [quotient], eax
+  mov [remainder], edx
+  ret
 
 _times_ten: ; multiply a number by 10 function
   mov ebx, [ten_val]
@@ -114,13 +113,13 @@ _loop_pot:
   ret
 
 _square: ;square function
-    mov ebx, [square]
-    mov ecx, [square]
-    jmp _loop_s
+  mov ebx, [square]
+  mov ecx, [square]
+  jmp _loop_s
 _loop_s:
-    dec ecx
-    add ebx, [square]
-    cmp ecx, 1
-    jne _loop_s
-    mov dword [square_ret], ebx
-    ret
+  dec ecx
+  add ebx, [square]
+  cmp ecx, 1
+  jne _loop_s
+  mov dword [square_ret], ebx
+  ret
