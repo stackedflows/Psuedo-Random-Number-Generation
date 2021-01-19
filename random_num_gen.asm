@@ -3,7 +3,6 @@ section .bss ; declare variable arrays
   _bss_start:
     seed resd 8
     numbers_seen resq 4000
-    position_in_seen resd 8
 
     square resd 8
     square_ret resd 8
@@ -29,6 +28,8 @@ section .bss ; declare variable arrays
     middle_num resd 8
     middle_num_length resd 8
     middle_num_ret resd 8
+
+    position resd 8
   _bss_end:
 
 ;;main code
@@ -37,10 +38,10 @@ section .text ; code section
 _start:
   mov eax, 1
 
-  mov dword [middle_num], 123123415
-  call _middle_digit
-  mov eax, 1
-  int 0x80
+
+;;processes
+_cycle:
+  
 
 ;;functions
 _middle_digit: ; returns the middle digit of middle_num to middle_num_ret
