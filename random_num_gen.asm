@@ -1,5 +1,4 @@
-;;globals
-section .bss ; declare variable arrays
+section .bss ; declare variables and arrays
   _bss_start:
     square resd 8
     square_ret resd 8
@@ -24,12 +23,12 @@ section .bss ; declare variable arrays
 
     current_number resd 8
     seed resd 8 ; greater than 2 digits
-    numbers_seen resb 4000 ; 1000 entries of 8 bytes
+    numbers_seen resb 4000 ; 1000 entries of single bytes
     position resd 8
   _bss_end:
 
 ;;main code
-section .text ; code section
+section .text
   global _start
 _start:
   mov dword [seed], 1234
