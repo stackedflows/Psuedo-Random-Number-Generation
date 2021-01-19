@@ -52,7 +52,6 @@ _loop_pa:
   cmp ecx, 1000
   jg _gg
   jl _loop_pa
-
 _gg:
   mov eax, 1
   mov ebx, [numbers_seen + 13] ;pick what number in the sequence to look at
