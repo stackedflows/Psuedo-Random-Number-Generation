@@ -25,6 +25,10 @@ section .bss ; declare variable arrays
 
     number_to_analyse resd 8
     base_ten_iterations resd 8
+
+    middle_num resd 8
+    middle_num_length resd 8
+    middle_num_ret resd 8
   _bss_end:
 
 ;;main code
@@ -33,14 +37,28 @@ section .text ; code section
 _start:
   mov eax, 1
 
-  mov dword [number_to_parse], 13213
-  mov dword [digit], 2
-  call _nth_digit
+  mov dword [middle_num], 123123415
+  call _middle_digit
   mov eax, 1
-  mov ebx, [digit_ret]
   int 0x80
 
 ;;functions
+_middle_digit: ; returns the middle digit of middle_num to middle_num_ret
+  mov ebx, [middle_num]
+  mov dword [number_to_analyse], ebx
+  call _length
+  mov ebx, [base_ten_iterations]
+  mov dword [to_divide], ebx
+  mov dword [divide_by], 2
+  call _divide
+  mov ebx, [quotient]
+  mov eax, [middle_num]
+  mov dword [number_to_parse], eax
+  mov dword [digit], ebx
+  call _nth_digit
+  mov ebx, [digit_ret]
+  ret
+
 _length: ;calulates number of digits in number, returns to base_ten_iterations
   mov edx, 1
   jmp _loop_l
@@ -55,6 +73,7 @@ _loop_l:
   jl _loop_l
   jg _exit
 _exit:
+  mov eax, 1 ; possible faults
   mov dword [base_ten_iterations], edx
   ret
 
