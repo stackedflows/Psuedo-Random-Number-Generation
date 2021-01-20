@@ -16,3 +16,10 @@ To get good results, the seed should be an even number of digits, and large
 more information on the general form of this algorithm can be found here.
 
 https://en.wikipedia.org/wiki/Middle-square_method
+
+to run, we simply enter
+
+    nasm -f elf32 random_num_gen.asm -o gen.o
+    ld -m elf_i386 gen.o -o gen
+    ./gen
+    echo $?
