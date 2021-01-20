@@ -12,3 +12,7 @@ On each iteration, we square the 'seed', and if there are an even number of digi
 We then return the middle digit of the square, add it to the array, and repeat the process, untill our condition is met.
 
 To get good results, the seed should be an even number of digits, and large
+
+more information on the general form of this algorithm can be found here.
+
+https://en.wikipedia.org/wiki/Middle-square_method
