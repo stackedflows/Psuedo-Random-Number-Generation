@@ -2,17 +2,17 @@ section .bss
   fib resb 4
   fib_ resb 4
 
-
 section	.text
    global _start
 
+; 1st and 2nd fibonacci numbers, and the number of iterations
 _start:
   mov dword [fib], 0
   mov dword [fib_], 1
-  mov edx, 11             ;for calculating [] iterations
+  mov edx, 11
   call call_fib
 
-  mov	eax,1          ;print
+  mov	eax,1
   mov ebx, [fib_]
   int	0x80
 
