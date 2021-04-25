@@ -27,9 +27,9 @@ to run, we simply enter
  
 # Fibonacci Gen
 
-Is this too much voodoo for the next 10 centuries of gods official temple?
-
     nasm -f elf32 fib.asm -o fib.o
     ld -m elf_i386 fib.o -o _fib
     ./_fib
     echo $?
+    
+Is this too much voodoo for the next 10 centuries of gods official temple?
