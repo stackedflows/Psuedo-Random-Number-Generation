@@ -1,38 +1,46 @@
 section .bss
   _bss_start:
-    max_iterations resb 1
-    fibonacci_seq resb 256 ; we have allocated 64 x 4 bytes of storage
+    ; store max iterations and current iteration
+    max_iterations resb 4
+    iteration resb 4
+    ; store arguments
+    n_0 resb 4
+    n_1 resb 4
   _bss_end:
 
 section .text
-
   global _start
 
-_start: ; initialise the function variables
+; initialise the function variables
+_start:
   mov dword [max_iterations], 11
-  mov edx, 0
-  push 0
-  push 1
+  mov dword [iteration], 0
+  mov dword [n_0], 0
+  mov dword [n_1], 1
   jmp fib
 
 fib:
-  mov eax, 0
-  mov ebx, 0
   mov ecx, 0
-  pop ebx
-  pop eax
+  mov edx, 0
+  mov eax, [n_0]
+  mov ebx, [n_1]
   add ecx, eax
   add ecx, ebx
-  mov dword [fibonacci_seq + edx + 4], ecx ; records the current fib number
-  push eax
-  push ebx
-  push ecx
+  mov edx, [n_1]
+  mov dword [n_0], edx
+  mov dword [n_1], ecx
+
+  mov edx, [iteration]
   inc edx
+  mov dword [iteration], edx
+
   cmp edx, [max_iterations]
-  jle fib
   je print
+
+  call fib
+  ret
 
 print:
   mov eax, 1
-  pop ebx
+  mov ebx, [n_1]
   int 0x80
