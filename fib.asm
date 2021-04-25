@@ -1,46 +1,32 @@
 section .bss
-  _bss_start:
-    ; store max iterations and current iteration
-    max_iterations resb 4
-    iteration resb 4
-    ; store arguments
-    n_0 resb 4
-    n_1 resb 4
-  _bss_end:
+  fib resb 4
+  fib_ resb 4
 
-section .text
-  global _start
 
-; initialise the function variables
+section	.text
+   global _start
+
 _start:
-  mov dword [max_iterations], 11
-  mov dword [iteration], 0
-  mov dword [n_0], 0
-  mov dword [n_1], 1
-  jmp fib
+  mov dword [fib], 0
+  mov dword [fib_], 1
+  mov edx, 11             ;for calculating [] iterations
+  call call_fib
 
-fib:
-  mov ecx, 0
-  mov edx, 0
-  mov eax, [n_0]
-  mov ebx, [n_1]
-  add ecx, eax
-  add ecx, ebx
-  mov edx, [n_1]
-  mov dword [n_0], edx
-  mov dword [n_1], ecx
+  mov	eax,1          ;print
+  mov ebx, [fib_]
+  int	0x80
 
-  mov edx, [iteration]
-  inc edx
-  mov dword [iteration], edx
-
-  cmp edx, [max_iterations]
-  je print
-
-  call fib
+call_fib:
+  cmp edx, 0
+  jg do_calculation
   ret
 
-print:
-  mov eax, 1
-  mov ebx, [n_1]
-  int 0x80
+do_calculation:
+  dec edx
+  call call_fib
+  mov eax, [fib]
+  mov ebx, [fib_]
+  add eax, ebx
+  mov dword [fib_], eax
+  mov dword [fib], ebx
+  ret
