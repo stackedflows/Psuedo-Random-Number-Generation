@@ -27,6 +27,8 @@ to run, we simply enter
  
 # Fibonacci Gen
 
+Recursive fibonacci generator.
+
     nasm -f elf32 fib.asm -o fib.o
     ld -m elf_i386 fib.o -o _fib
     ./_fib
