@@ -13,4 +13,4 @@ to run, we simply enter
  
 # ARM
 
-Repo for arm based learnign
+Repo for arm based software
